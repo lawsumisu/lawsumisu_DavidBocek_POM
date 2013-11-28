@@ -46,8 +46,20 @@ public:
         }
     }
     
-    static Vector3f getHeightMapPoint(float height, float delta, Vector3f normal, Vector3f tangent, Vector3f origin){
-        return origin + height*-normal + delta*tangent;
+    /*
+     * Method that converts a point in <delta, height> space into a point in <x,y,z>
+     * space as an input origin point.
+     */
+    static Vector3f getHeightMapPoint(float delta, float height, Vector3f origin, Vector3f normal, Vector3f projection){
+        return origin + height*-normal + delta*projection;
+    }
+    /* 
+     * Method that gets the projection of an incident ray on a plane.
+     */
+    static Vector3f getProjection(Ray ray, Vector3f normal){
+        Vector3f dir = ray.getDirection();
+        Vector3f normalComponent = Vector3f::dot(dir, normal)*normal;
+        return dir-normal;
     }
 }
 #endif
