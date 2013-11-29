@@ -11,6 +11,8 @@
 
 #include <vecmath.h>
 #include "Ray.h"
+#include "Segment.h"
+#include <cmath>
 
 class POMUtils{
 public:
@@ -60,6 +62,14 @@ public:
         Vector3f dir = ray.getDirection();
         Vector3f normalComponent = Vector3f::dot(dir, normal)*normal;
         return dir-normal;
+    }
+    
+    /*
+     * Converts an incident ray on a plane to a 2D Segment located at the origin
+     */
+    static Segment convertRayTo2DSegment(Ray ray, Vector3f normal){
+        float angle = acos(Vector3f::dot(ray.getDirection(), normal));
+        return Segment(Vector2f::ZERO, Vector2f(tan(angle), 1));
     }
 }
 #endif
