@@ -12,6 +12,7 @@
 #include "Ray.h"
 #include "Group.h"
 #include "Light.h"
+#include "POMUtils.h"
 
 using namespace std;
 

@@ -52,7 +52,7 @@ public:
             float u = u_num/denom;
             float t = t_num/denom;
             if (u >=0 && u<=1 && t>=0 && t<=1){
-                intersection = s1.origin()+t*s1.dir();
+                intersection = s1.origin()+t*s1.direction();
                 return true;
             }
             else{
@@ -67,6 +67,6 @@ private:
     static float cross(Vector2f v, Vector2f w){
         return v.x()*w.y() - v.y()*w.x();
     }
-}
+};
 
 #endif
