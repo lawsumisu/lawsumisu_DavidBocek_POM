@@ -6,7 +6,8 @@ obj/Debug/main.o: src/main.cpp src/SceneParser.h \
  src/Ray.h vecmath/include/Vector3f.h src/Light.h src/Object3D.h \
  src/Hit.h src/Material.h src/texture.hpp src/bitmap_image.hpp \
  src/VecUtils.h src/Mesh.hpp src/Triangle.h vecmath/include/Vector2f.h \
- src/Group.h src/Sphere.h src/Plane.h src/Transform.h src/Image.h
+ src/Group.h src/Sphere.h src/Plane.h src/Transform.h src/Image.h \
+ src/POMUtils.h src/Segment.h
 
 src/SceneParser.h:
 
@@ -61,3 +62,7 @@ src/Plane.h:
 src/Transform.h:
 
 src/Image.h:
+
+src/POMUtils.h:
+
+src/Segment.h:

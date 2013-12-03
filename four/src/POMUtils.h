@@ -22,7 +22,7 @@ public:
         
         float denom = Vector3f::cross(d, s).abs();
         float t_num = Vector3f::cross(q-o, s).abs();
-        float _num = Vector3f::cross(o-q, d).abs();
+        float u_num = Vector3f::cross(o-q, d).abs();
         
         if (denom == 0){
             //Lines are parallel.
@@ -71,5 +71,5 @@ public:
         float angle = acos(Vector3f::dot(ray.getDirection(), normal));
         return Segment(Vector2f::ZERO, Vector2f(tan(angle), 1));
     }
-}
+};
 #endif
