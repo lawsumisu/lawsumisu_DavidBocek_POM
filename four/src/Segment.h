@@ -67,6 +67,6 @@ private:
     static float cross(Vector2f v, Vector2f w){
         return v.x()*w.y() - v.y()*w.x();
     }
-}
+};
 
 #endif
