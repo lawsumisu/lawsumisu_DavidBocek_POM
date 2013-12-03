@@ -20,26 +20,26 @@ public:
         dir = end-start;
     }
     
-    Vector2f dir(){
+    Vector2f direction(){
         return dir;
     }
-    Vector2f o(){
+    Vector2f origin(){
         return o;
     }
     static bool intersect(Segment s1, Segment s2, Vector2f& intersection){
-        float denom = cross(s1.dir(), s2.dir());
-        float t_num = cross(s2.o()-s1.o(), s2.dir());
-        float u_num = cross(s1.o()-s2.o(), s1.dir());
+        float denom = cross(s1.direction(), s2.direction());
+        float t_num = cross(s2.origin()-s1.origin(), s2.direction());
+        float u_num = cross(s1.origin()-s2.origin(), s1.direction());
         
         if (denom == 0){
             //Lines are parallel.
             if (u_num == 0){
                 //Lines are collinear
-                intersection = s2.o();
+                intersection = s2.origin();
                 return true;
             }
             else if (t_num == 0){
-                intersection = s1.o();
+                intersection = s1.origin();
                 return true;
             }
             else{
@@ -52,7 +52,7 @@ public:
             float u = u_num/denom;
             float t = t_num/denom;
             if (u >=0 && u<=1 && t>=0 && t<=1){
-                intersection = s1.o()+t*s1.dir();
+                intersection = s1.origin()+t*s1.dir();
                 return true;
             }
             else{
