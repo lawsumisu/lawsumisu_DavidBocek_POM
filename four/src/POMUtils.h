@@ -22,7 +22,7 @@ public:
         
         float denom = Vector3f::cross(d, s).abs();
         float t_num = Vector3f::cross(q-o, s).abs();
-        float u_num = Vector3f::cross(o-q, d).abs();
+        float _num = Vector3f::cross(o-q, d).abs();
         
         if (denom == 0){
             //Lines are parallel.
