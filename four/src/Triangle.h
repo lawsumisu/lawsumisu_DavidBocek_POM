@@ -69,9 +69,10 @@ public:
             	//cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
-		        for (float i=0; i<numPoints; i+=1){
-		            float d1 = i/numPoints*length;
-		            float d2 = (i+1)/numPoints*length;
+                float n = numPoints;
+		        for (int i=0; i<numPoints; i+=1){
+		            float d1 = i/n*length;
+		            float d2 = (i+1)/n*length;
 		            //Use deltas to get heights from height map.
 		            //get hit point in UV
 		            Vector2f hitUV = hit.texCoord;
