@@ -9,6 +9,7 @@
 #include "Hit.h"
 #include "texture.hpp"
 #include "VecUtils.h"
+#include "POMUtils.h"
 ///TODO:
 ///Implement Shade function that uses ambient, diffuse, specular and texture
 class Material
@@ -37,7 +38,8 @@ public:
           
           Vector3f k_d = getDiffuseColor();
           if (t.valid()){
-              k_d = t(texCoord[0], texCoord[1]);
+              //k_d = t(texCoord[0], texCoord[1]);
+              k_d = heightMapColor;
           }
           
           Vector3f n = hit.getNormal().normalized();
@@ -67,11 +69,15 @@ public:
       void setTexCoord(Vector2f uv){
           this->texCoord = uv;
       }
+      void setHeightMapColor(float color){
+        this->heightMapColor = Vector3f(color, color, color);
+      }
       Vector2f getTexCoord(){
       	return texCoord;
       }
 protected:
 	Vector2f texCoord;
+  Vector3f heightMapColor;
     Vector3f diffuseColor;
     Vector3f specularColor;
     

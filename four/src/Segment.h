@@ -55,6 +55,7 @@ public:
             }
         }
         else{
+            
             //Lines can intersect
             float u = u_num/denom;
             float t = t_num/denom;

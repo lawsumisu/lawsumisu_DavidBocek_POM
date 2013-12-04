@@ -60,16 +60,14 @@ public:
         	Vector2f uvCoordOffset = Vector2f::ZERO;
             //Check for intersection here.
             Vector3f interpolatedNormal = normals[0]*(1-beta-gamma)+normals[1]*beta+normals[2]*gamma;
-            //Do segment intersection to get appropriate texCoordinate.
-            Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
-            //incidentSegment.print();
-            float length = incidentSegment.end()[0];
-            //Do segment intersection to get appropriate texCoordinate offset.
 
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
             	//cout << heightmap << endl << endl;
+                 //Do segment intersection to get appropriate texCoordinate.
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
-		        float length = incidentSegment.end()[0];
+                Vector3f incidentPoint = ray.pointAtParameter(t);
+                Vector3f projection = POMUtils::getProjection(ray, interpolatedNormal);
+                float length = incidentSegment.end()[0];
                 float n = numPoints;
 		        for (int i=0; i<numPoints; i+=1){
 		            float d1 = i/n*length;
@@ -78,55 +76,27 @@ public:
 		            //get hit point in UV
 		            Vector2f hitUV = uvCoord;
 		            //get ray direction projected to UV
-		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
+		            Vector3f rayDirUVN = transformXYZtoUVN(incidentPoint);
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
 		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
-		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
-		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
+                    Vector2f uv1 = transformXYZtoUVN(incidentPoint+d1*projection).xy();
+                    Vector2f uv2 = transformXYZtoUVN(incidentPoint+d2*projection).xy();
+		            float h1 = POMUtils::QueryHeightmap(uv1, heightmap);
+		            float h2 = POMUtils::QueryHeightmap(uv2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
 		            Vector2f intersection;
 		            if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
 		                float delta = intersection.x();
 		                //get coordinate offset for this delta
-		                uvCoordOffset = hitUV + rayDirUV * delta;
+		                uvCoord = transformXYZtoUVN(incidentPoint+delta*projection).xy();
 		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
             }
-            /*Binary method (In progress).
-            float a = 0;
-            float c = numPoints;
-            float n = numPoints;
-            while(true){
-                float b = ((int)c)/2;
-                float d1 = a/n*length;
-                float d2 = b/n*length;
-                float d3 = c/n*length;
-                float h1 = 0.5f;
-                float h2 = 0.5f;
-                float h3 = 0.5f;
-                Segment parallaxSegment1 = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
-                parallaxSegment1.print();
-                Segment parallaxSegment2 = Segment(Vector2f(d2,h2), Vector2f(d3,h3));
-                parallaxSegment2.print();
-                Vector2f intersection;
-                if (Segment::intersect(incidentSegment, parallaxSegment1, intersection)){
-                    float delta = intersection.x();
-                    cout <<"Left intersect: " << delta << " " << length <<  endl;
-                    break;
-                    //TODO: Use delta to get u,v texCoordinate
-                    //material->setTexCoord(TODO: set tex coord here)
-                }
-                else if (Segment::intersect(incidentSegment, parallaxSegment2, intersection)){
-                    float delta = intersection.x();
-                    cout << "Right intersect: " << delta << endl;
-                    break;
-                    //TODO: Use delta to get u,v texCoordinate
-                    //material->setTexCoord(TODO: set tex coord here)
-                }*/
             //barycentric interpolation with added parallax offset
-            material->setTexCoord(uvCoord+uvCoordOffset);
+            material->setTexCoord(uvCoord);
+            material->setHeightMapColor(POMUtils::QueryHeightmap(uvCoord, heightmap));
             hit.set(t, material, interpolatedNormal);
             return true;
         }

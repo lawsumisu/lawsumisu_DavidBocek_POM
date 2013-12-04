@@ -64,7 +64,7 @@ public:
     static Vector3f getProjection(Ray ray, Vector3f normal){
         Vector3f dir = ray.getDirection();
         Vector3f normalComponent = Vector3f::dot(dir, normal)*normal;
-        return dir-normal;
+        return (dir-normalComponent).normalized();
     }
     
     /*
@@ -86,7 +86,7 @@ public:
     	if(!(color[0] == color[1] && color[1] == color[2] && color[0] == color[2])){
     		std::cout << color[1] << " " << color[2] << " " << color[3] << "\n";
     	}
-    	return (1.0f - color[0]);
+    	return (color[0]);
     }
     
 };
