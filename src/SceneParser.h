@@ -13,6 +13,7 @@
 #include "Group.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "PlaneTriangle.h"
 #include "Triangle.h"
 #include "Transform.h"
 
@@ -106,6 +107,7 @@ private:
     Group* parseGroup();
     Sphere* parseSphere();
     Plane* parsePlane();
+    PlaneTriangle* parsePlaneTriangle();
     Triangle* parseTriangle();
     Mesh* parseTriangleMesh();
     Transform* parseTransform();

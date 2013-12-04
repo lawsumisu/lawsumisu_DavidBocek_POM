@@ -132,6 +132,28 @@ public:
     	return M * xyzCoords;
     }
     
+        bool triangleIntersect(const Ray& ray, Hit& hit, float tmin, float& tIntersect){
+        //Uses Cramer's rule to calculate barycentric coordinates.
+        Vector3f r_d = ray.getDirection();
+        Vector3f r_o = ray.getOrigin();
+        
+        Matrix3f m_A = Matrix3f(a-b, a-c, r_d);
+        Matrix3f m_Beta = Matrix3f(a-r_o, a-c, r_d);
+        Matrix3f m_Gamma = Matrix3f(a-b, a-r_o, r_d);
+        Matrix3f m_T = Matrix3f(a-b, a-c, a-r_o);
+        float A_determinant = m_A.determinant();
+        
+        float beta = m_Beta.determinant()/A_determinant;
+        float gamma = m_Gamma.determinant()/A_determinant;
+        float t = m_T.determinant()/A_determinant;
+        
+        if (beta+gamma <= 1 && beta >= 0 && gamma >=0 && t>tmin && t<hit.getT()){
+            tIntersect = t;
+            return true;
+        }
+        return false;
+    }
+
     bool hasTex;
     Vector3f normals[3];
     Vector2f texCoords[3];
