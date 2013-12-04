@@ -89,5 +89,23 @@ public:
     	return (1.0f - color[0]);
     }
     
+    static bool Intersect(const Vector2f& rayDirTH, float d1, float h1, float d2, float h2, Vector2f& intersectCoord){
+    	float t1 = d1/rayDirTH[0];
+    	float t2 = d2/rayDirTH[0];
+    	float rayH1 = rayDirTH[1]*t1;
+    	float rayH2 = rayDirTH[1]*t2;
+    	if (rayH1 < h1 && rayH2 > h2){
+    		float hDiff1 = h1-rayH1;
+    		float hDiff2 = rayH2-h2;
+    		intersectCoord = Vector2f(d1,h1) + (Vector2f(d2,h2)-Vector2f(d1,h1))*(hDiff1/(hDiff1+hDiff2));
+    		return true;
+    	} else if (rayH1 > h1 && rayH2 < h2){
+    		float hDiff1 = rayH1-h1;
+    		float hDiff2 = h2-rayH2;
+    		intersectCoord = Vector2f(d1,h1) + (Vector2f(d2,h2)-Vector2f(d1,h1))*(hDiff1/(hDiff1+hDiff2));
+    		return true;
+    	}
+    }
+    
 };
 #endif
