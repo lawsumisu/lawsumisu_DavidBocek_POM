@@ -5,6 +5,7 @@
 #include "Segment.h"
 #include "POMUtils.h"
 #include <vecmath.h>
+#include <cstdlib>
 #include <cmath>
 #include <iostream>
 
@@ -57,7 +58,12 @@ public:
         	Vector2f uvCoordOffset = Vector2f::ZERO;
             //Check for intersection here.
             Vector3f interpolatedNormal = normals[0]*(1-beta-gamma)+normals[1]*beta+normals[2]*gamma;
+            //Do segment intersection to get appropriate texCoordinate.
+            Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
+            //incidentSegment.print();
+            float length = incidentSegment.end()[0];
             //Do segment intersection to get appropriate texCoordinate offset.
+
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
@@ -83,13 +89,42 @@ public:
 		            }
 		        }
             }
+            /*Binary method (In progress).
+            float a = 0;
+            float c = numPoints;
+            float n = numPoints;
+            while(true){
+                float b = ((int)c)/2;
+                float d1 = a/n*length;
+                float d2 = b/n*length;
+                float d3 = c/n*length;
+                float h1 = 0.5f;
+                float h2 = 0.5f;
+                float h3 = 0.5f;
+                Segment parallaxSegment1 = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
+                parallaxSegment1.print();
+                Segment parallaxSegment2 = Segment(Vector2f(d2,h2), Vector2f(d3,h3));
+                parallaxSegment2.print();
+                Vector2f intersection;
+                if (Segment::intersect(incidentSegment, parallaxSegment1, intersection)){
+                    float delta = intersection.x();
+                    cout <<"Left intersect: " << delta << " " << length <<  endl;
+                    break;
+                    //TODO: Use delta to get u,v texCoordinate
+                    //material->setTexCoord(TODO: set tex coord here)
+                }
+                else if (Segment::intersect(incidentSegment, parallaxSegment2, intersection)){
+                    float delta = intersection.x();
+                    cout << "Right intersect: " << delta << endl;
+                    break;
+                    //TODO: Use delta to get u,v texCoordinate
+                    //material->setTexCoord(TODO: set tex coord here)
+                }*/
             //barycentric interpolation with added parallax offset
             material->setTexCoord(texCoords[0]*(1-beta-gamma)+texCoords[1]*beta+texCoords[2]*gamma+uvCoordOffset);
             hit.set(t, material, interpolatedNormal);
             return true;
         }
-                            
-        
         return false;
     }
     

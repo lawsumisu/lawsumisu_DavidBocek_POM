@@ -12,6 +12,7 @@
 #define _Segment_h
 
 #include <vecmath.h>
+#include <cstdlib>
 
 class Segment{
 public:
@@ -28,6 +29,9 @@ public:
     }
     Vector2f end(){
         return o+dir;
+    }
+    void print(){
+        cout << "Segment: " << "(" << o.x() << "," << o.y() << ") -> (" << end().x() << "," << end().y() << ")" << endl;
     }
     static bool intersect(Segment s1, Segment s2, Vector2f& intersection){
         float denom = cross(s1.direction(), s2.direction());
