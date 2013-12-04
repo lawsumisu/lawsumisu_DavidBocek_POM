@@ -69,18 +69,21 @@ public:
             	//cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
-		        for (int i=0; i<numPoints; i+=1){
+		        for (float i=0; i<numPoints; i+=1){
 		            float d1 = i/numPoints*length;
 		            float d2 = (i+1)/numPoints*length;
 		            //Use deltas to get heights from height map.
 		            //get hit point in UV
 		            Vector2f hitUV = hit.texCoord;
 		            //get ray direction projected to UV
-		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
+		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection()).normalized();
 		            //cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
-		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
+		            cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
+		            texCoords[0].print();
+		            texCoords[1].print();
+		            texCoords[2].print();
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
@@ -89,6 +92,7 @@ public:
 		                float delta = intersection.x();
 		                //get coordinate offset for this delta
 		                uvCoordOffset = hitUV + rayDirUV * delta;
+		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
             }
