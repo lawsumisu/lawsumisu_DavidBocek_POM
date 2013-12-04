@@ -39,6 +39,7 @@ Heightmaps {
 Group {
     numObjects 1
     MaterialIndex 0
+    HeightmapIndex 0
     PlaneTriangle {
  	width 20.0
 	height 10.0

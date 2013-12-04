@@ -408,7 +408,7 @@ PlaneTriangle* SceneParser::parsePlaneTriangle(){
     float height = readFloat();
     getToken(token); assert (!strcmp(token, "}"));
     assert (current_material != NULL);
-    return new PlaneTriangle(width, height, current_material);
+    return new PlaneTriangle(width, height, current_material, current_heightmap);
 }
 
 Triangle* SceneParser::parseTriangle() {
