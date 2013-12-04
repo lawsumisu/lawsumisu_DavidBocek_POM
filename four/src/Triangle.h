@@ -63,7 +63,7 @@ public:
             //Do segment intersection to get appropriate texCoordinate.
             //Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
             //incidentSegment.print();
-           // float length = incidentSegment.end()[0];
+            //float length = incidentSegment.end()[0];
             //Do segment intersection to get appropriate texCoordinate offset.
 
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied

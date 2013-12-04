@@ -96,7 +96,7 @@ public:
     	float rayH2 = rayDirTH[1]*t2;
     	if (rayH1 < h1 && rayH2 > h2){
     		float hDiff1 = h1-rayH1;
-    		floWat hDiff2 = rayH2-h2;
+    		float hDiff2 = rayH2-h2;
     		intersectCoord = Vector2f(d1,h1) + (Vector2f(d2,h2)-Vector2f(d1,h1))*(hDiff1/(hDiff1+hDiff2));
     		return true;
     	} else if (rayH1 > h1 && rayH2 < h2){

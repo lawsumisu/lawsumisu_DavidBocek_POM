@@ -105,6 +105,7 @@ public:
     		intersectCoord = Vector2f(d1,h1) + (Vector2f(d2,h2)-Vector2f(d1,h1))*(hDiff1/(hDiff1+hDiff2));
     		return true;
     	}
+    	return false;
     }
     
 };
