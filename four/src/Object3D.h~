@@ -20,7 +20,7 @@ public:
     
     Object3D( Material* material, Texture* heightmap){
     	this->material = material;
-    	this->heightmap = heightmap;
+    	this->heightmap = heightmapl
     }
 
     virtual bool intersect( const Ray& r , Hit& h, float tmin) = 0;

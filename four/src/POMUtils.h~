@@ -75,8 +75,10 @@ public:
     /*
      * Returns the heightmap value for the given uvCoordinates on the given heightmap
      */
-    static float QueryHeightmap(const Vector2f& uvCoords, const Texture* heightmap){
-    	return (1.0f - heightmap(uvCoords[0],uvCoords[1]));
+    static float QueryHeightmap(const Vector2f& uvCoords, Texture* heightmap){
+    	Vector3f color = heightmap->operator()(uvCoords[0],uvCoords[1]);
+    	assert(color[0] == color[1] && color[1] == color[2] && color[0] == color[2]);
+    	return (1.0f - color[0]);
     }
     
 };

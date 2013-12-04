@@ -125,7 +125,6 @@ private:
     int num_materials;
     Material** materials;
     Material* current_material;
-    int num_heightmaps;
     Texture** heightmaps;
     Texture* current_heightmap;
     Group* group;

@@ -102,7 +102,7 @@ public:
     	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ);
     	Vector3f vVec = Vector3f::cross(uVec,nVec);
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
-    	M.transpose();
+    	M.transpose()
     	return M * xyzCoords;
     }
     
