@@ -58,7 +58,6 @@ public:
         	Vector2f uvCoordOffset = Vector2f::ZERO;
             //Check for intersection here.
             Vector3f interpolatedNormal = normals[0]*(1-beta-gamma)+normals[1]*beta+normals[2]*gamma;
-<<<<<<< HEAD
             //Do segment intersection to get appropriate texCoordinate.
             Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
             //incidentSegment.print();
