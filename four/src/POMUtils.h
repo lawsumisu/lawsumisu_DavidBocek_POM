@@ -13,6 +13,9 @@
 #include "Ray.h"
 #include "Segment.h"
 #include <cmath>
+#include <cstdlib>
+
+#define _USE_MATH_DEFINES
 
 class POMUtils{
 public:
@@ -68,7 +71,9 @@ public:
      * Converts an incident ray on a plane to a 2D Segment located at the origin
      */
     static Segment convertRayTo2DSegment(Ray ray, Vector3f normal){
-        float angle = acos(Vector3f::dot(ray.getDirection(), normal));
+        float angle = acos(Vector3f::dot(ray.getDirection(), normal)) - M_PI/2;
+        angle = max(0.0f, angle);
+        //cout << "Angle: " << angle << endl;
         return Segment(Vector2f::ZERO, Vector2f(tan(angle), 1));
     }
 };
