@@ -38,8 +38,8 @@ public:
           
           Vector3f k_d = getDiffuseColor();
           if (t.valid()){
-              //k_d = t(texCoord[0], texCoord[1]);
-              k_d = heightMapColor;
+              k_d = t(texCoord[0], texCoord[1]);
+              //k_d = heightMapColor;
           }
           
           Vector3f n = hit.getNormal().normalized();

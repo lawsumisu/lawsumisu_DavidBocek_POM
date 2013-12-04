@@ -73,23 +73,28 @@ public:
 		            float d1 = i/n*length;
 		            float d2 = (i+1)/n*length;
 		            //Use deltas to get heights from height map.
-		            //get hit point in UV
-		            Vector2f hitUV = uvCoord;
 		            //get ray direction projected to UV
-		            Vector3f rayDirUVN = transformXYZtoUVN(incidentPoint);
-		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
-		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
-                    Vector2f uv1 = transformXYZtoUVN(incidentPoint+d1*projection).xy();
-                    Vector2f uv2 = transformXYZtoUVN(incidentPoint+d2*projection).xy();
-		            float h1 = POMUtils::QueryHeightmap(uv1, heightmap);
-		            float h2 = POMUtils::QueryHeightmap(uv2, heightmap);
+                    Vector2f hitUV = hit.texCoord;
+                    //get ray direction projected to UV
+                    Vector3f rayDirUVN = transformXYZtoUVN(projection);
+                    //cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
+                    Vector2f rayDirUV = rayDirUVN.xy();
+                    //Query heightmap at {d1,d2} along T
+                    //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
+                    float h1 = POMUtils::QueryHeightmap(uvCoord + hitUV + rayDirUV * d1, heightmap);
+                    float h2 = POMUtils::QueryHeightmap(uvCoord + hitUV + rayDirUV * d2, heightmap);
+                    //Vector2f uv1 = transformXYZtoUVN(incidentPoint+d1*projection).xy();
+                    //Vector2f uv2 = transformXYZtoUVN(incidentPoint+d2*projection).xy();
+		            //float h1 = POMUtils::QueryHeightmap(uv1, heightmap);
+		            //float h2 = POMUtils::QueryHeightmap(uv2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
 		            Vector2f intersection;
 		            if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
 		                float delta = intersection.x();
 		                //get coordinate offset for this delta
-		                uvCoord = transformXYZtoUVN(incidentPoint+delta*projection).xy();
+		                uvCoord += hitUV + rayDirUV * delta;
+                        //cout << h1 << " " << h2 << endl;
 		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
