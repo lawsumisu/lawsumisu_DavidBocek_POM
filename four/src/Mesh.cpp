@@ -10,10 +10,10 @@ bool Mesh::intersect( const Ray& r , Hit& h , float tmin ) {
     for( unsigned int i = 0 ; i < t.size() ; i++){
     	Triangle triangle(v[t[i][0]],
         	v[t[i][1]],v[t[i][2]],material,heightmap);
-    	if (this->heightmap == NULL){
+    	/*if (this->heightmap == NULL){
         	Triangle triangle(v[t[i][0]],
             	v[t[i][1]],v[t[i][2]],material);
-        }
+        }*/
         for(int jj=0;jj<3;jj++){
             triangle.normals[jj] = n[t[i][jj]];
 

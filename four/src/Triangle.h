@@ -148,7 +148,7 @@ public:
     	//uVec.print(); vVec.print(); nVec.print();
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
-    	M.print();
+    	//M.print();
     	//return M * xyzCoords;
     }
     
