@@ -48,9 +48,9 @@ public:
             //Do segment intersection to get appropriate texCoordinate.
             Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
             float length = incidentSegment.end()[0];
-            for (int i=0; i<length; i++){
-                float d1 = i/length;
-                float d2 = (i+1)/length;
+            for (int i=0; i<numPoints; i++){
+                float d1 = i/numPoints*length;
+                float d2 = (i+1)/numPoints*length;
                 //TODO: Use deltas to get heights from height map.
                 float h1; 
                 float h2;
