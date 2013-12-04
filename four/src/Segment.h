@@ -26,6 +26,9 @@ public:
     Vector2f origin(){
         return o;
     }
+    Vector2f end(){
+        return o+dir;
+    }
     static bool intersect(Segment s1, Segment s2, Vector2f& intersection){
         float denom = cross(s1.direction(), s2.direction());
         float t_num = cross(s2.origin()-s1.origin(), s2.direction());

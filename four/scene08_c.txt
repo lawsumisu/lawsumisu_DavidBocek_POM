@@ -10,7 +10,7 @@ Lights {
     numLights 2
     PointLight {
         position 0.5 2 1
-        color 0.9 0.7 0.5 
+        color 0.9 0.9 0.9 
     }
     PointLight {
         position 0.5 20 1
@@ -36,7 +36,7 @@ Materials {
 	  diffuseColor 0.2 0.8 0.2
 	  specularColor 0.7 0.9 0.7
 	  shininess 20
-	  texture tex/body.bmp
+	  texture models/terrain/texture-rock.bmp
 	}
 	
 	PhongMaterial { 
@@ -50,7 +50,6 @@ Materials {
 	  diffuseColor 0.2 0.8 0.2
 	  specularColor 0.7 0.9 0.7
 	  shininess 20
-	  texture models/terrain/texture-rock.bmp
 	}
 }
 

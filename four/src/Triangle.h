@@ -2,6 +2,8 @@
 #define TRIANGLE_H
 
 #include "Object3D.h"
+#include "Segment.h"
+#include "POMUtils.h"
 #include <vecmath.h>
 #include <cmath>
 #include <iostream>
@@ -51,6 +53,23 @@ public:
         if (beta+gamma <= 1 && beta >= 0 && gamma >=0 && t>tmin && t<hit.getT()){
             //Check for intersection here.
             Vector3f interpolatedNormal = normals[0]*(1-beta-gamma)+normals[1]*beta+normals[2]*gamma;
+            //Do segment intersection to get appropriate texCoordinate.
+            Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
+            float length = incidentSegment.end()[0];
+            for (int i=0; i<numPoints; i++){
+                float d1 = i/numPoints*length;
+                float d2 = (i+1)/numPoints*length;
+                //TODO: Use deltas to get heights from height map.
+                float h1; 
+                float h2;
+                Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
+                Vector2f intersection;
+                if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
+                    float delta = intersection.x();
+                    //TODO: Use delta to get u,v texCoordinate
+                    //material->setTexCoord(TODO: set tex coord here)
+                }
+            }
             material->setTexCoord(texCoords[0]*(1-beta-gamma)+texCoords[1]*beta+texCoords[2]*gamma);
             hit.set(t, material, interpolatedNormal);
             return true;
@@ -62,6 +81,7 @@ public:
     bool hasTex;
     Vector3f normals[3];
     Vector2f texCoords[3];
+    int numPoints = 1000;
 protected:
     Vector3f a;
     Vector3f b;
