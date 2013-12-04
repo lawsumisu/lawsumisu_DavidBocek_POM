@@ -58,7 +58,7 @@ public:
             //Check for intersection here.
             Vector3f interpolatedNormal = normals[0]*(1-beta-gamma)+normals[1]*beta+normals[2]*gamma;
             //Do segment intersection to get appropriate texCoordinate offset.
-            if (heightmap != NULL){ //only run this if there is a heightmap supplied
+            if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
 		        for (int i=0; i<numPoints; i++){
@@ -69,6 +69,7 @@ public:
 		            Vector2f hitUV = hit.texCoord;
 		            //get ray direction projected to UV
 		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
+		            cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
@@ -101,8 +102,10 @@ public:
     									(e12_XYZ / e12_UV[0]).normalized();
     	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ);
     	Vector3f vVec = Vector3f::cross(uVec,nVec);
+    	uVec.print(); vVec.print(); nVec.print();
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
+    	M.print();
     	return M * xyzCoords;
     }
     
