@@ -68,8 +68,8 @@ public:
 
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
             	//cout << heightmap << endl << endl;
-		        //Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
-		        //float length = incidentSegment.end()[0];
+		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
+		        float length = incidentSegment.end()[0];
 		        
 		        //get hit point in UV
 		        Vector2f hitUV = uvCoord;
@@ -77,8 +77,8 @@ public:
 		        Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
 		        Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		        
-		        Vector2f rayDirTH = Vector2f(rayDirUV.abs(),-rayDirUVN[2]).normalized();
-		        float length = (1.0f/rayDirTH[0])*rayDirTH[1];
+		        //Vector2f rayDirTH = Vector2f(rayDirUV.abs(),-rayDirUVN[2]).normalized();
+		        //float length = (1.0f/rayDirTH[0])*rayDirTH[1];
 		        
                 float n = numPoints;
                 bool hasHit; //since we only want the first intersection
@@ -91,15 +91,15 @@ public:
 		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
-		            //Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
+		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
 		            Vector2f intersection;
-		            //if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
-		            if (POMUtils::Intersect(rayDirTH,d1,h1,d2,h2,intersection)){
+		            if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
+		         	//if (POMUtils::Intersect(rayDirTH,d1,h1,d2,h2,intersection)){
 		                float delta = intersection[0];
 		                //get coordinate offset for this delta
 		                uvCoordOffset = hitUV + rayDirUV * delta;
 		                hasHit = true;
-		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
+		                cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
             }
