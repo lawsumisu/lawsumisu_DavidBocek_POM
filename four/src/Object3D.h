@@ -17,6 +17,11 @@ public:
     Object3D( Material* material){
         this->material = material ; 
     }
+    
+    Object3D( Material* material, Texture* heightmap){
+    	this->material = material;
+    	this->heightmap = heightmap;
+    }
 
     virtual bool intersect( const Ray& r , Hit& h, float tmin) = 0;
 
@@ -25,6 +30,7 @@ public:
 protected:
 
     Material* material;
+    Texture* heightmap;
 };
 
 #endif

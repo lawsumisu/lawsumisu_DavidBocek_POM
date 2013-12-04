@@ -72,7 +72,13 @@ public:
         assert( i >= 0 && i < num_materials );
         return materials[i];
     }
-
+	
+	Texture* getHeightmap(int i) const
+	{
+		assert(i>=0 && i<num_heightmaps);
+		return heightmaps[i];
+	}
+	
     Group* getGroup() const
     {
         return group;
@@ -93,6 +99,8 @@ private:
     Light* parsePointLight();
     void parseMaterials();
     Material* parseMaterial();
+    void parseHeightmaps();
+    Texture* parseHeightmap();
 
     Object3D* parseObject( char token[ MAX_PARSER_TOKEN_LENGTH ] );
     Group* parseGroup();
@@ -117,6 +125,9 @@ private:
     int num_materials;
     Material** materials;
     Material* current_material;
+    int num_heightmaps;
+    Texture** heightmaps;
+    Texture* current_heightmap;
     Group* group;
 };
 

@@ -33,6 +33,7 @@ SceneParser::SceneParser(const char* filename) {
     num_materials = 0;
     materials = NULL;
     current_material = NULL;
+    current_heightmap = NULL;
 
     // parse the file
     assert(filename != NULL);
@@ -91,6 +92,8 @@ void SceneParser::parseFile() {
             parseBackground();
         } else if (!strcmp(token, "Lights")) {
             parseLights();
+        } else if (!strcmp(token, "Heightmaps")){
+        	parseHeightmaps();
         } else if (!strcmp(token, "Materials")) {
             parseMaterials();
         } else if (!strcmp(token, "Group")) {
@@ -217,7 +220,6 @@ void SceneParser::parseMaterials() {
     getToken(token); assert (!strcmp(token, "}"));
 }    
 
-
 Material* SceneParser::parseMaterial() {
     char token[MAX_PARSER_TOKEN_LENGTH];
     char filename[MAX_PARSER_TOKEN_LENGTH];
@@ -248,6 +250,46 @@ Material* SceneParser::parseMaterial() {
     if(filename[0] !=0){
         answer->loadTexture(filename);
     }
+    return answer;
+}
+// ====================================================================
+// ====================================================================
+
+void SceneParser::parseHeightmaps(){
+	char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token); assert (!strcmp(token, "{"));
+    // read in the number of objects
+    getToken(token); assert (!strcmp(token, "numHeightmaps"));
+    num_heightmaps = readInt();
+    heightmaps = new Texture*[num_heightmaps];
+    // read in the objects
+    int count = 0;
+    while (num_heightmaps > count) {
+        getToken(token); 
+        if (!strcmp(token, "Heightmap")) {
+        	heightmaps[count] = parseHeightmap();
+        } else {
+            printf ("Unknown token in parseMaterial: '%s'\n", token); 
+            exit(0);
+        }
+        count++;
+    }
+    getToken(token); assert (!strcmp(token, "}"));
+}
+
+Texture* SceneParser::parseHeightmap(){
+	char token[MAX_PARSER_TOKEN_LENGTH];
+    char filename[MAX_PARSER_TOKEN_LENGTH];
+    filename[0] = 0;
+    getToken(token); assert(!strcmp(token,"{"));
+    getToken(token);
+    if (strcmp(token,"heightmapFile")==0){
+    	getToken(filename);
+    }
+    getToken(token); assert(!strcmp(token,"}"));
+    assert(filename[0]!=0);
+    Texture* answer = new Texture();
+    answer->load(filename);
     return answer;
 }
 
@@ -300,7 +342,13 @@ Group* SceneParser::parseGroup() {
     int count = 0;
     while (num_objects > count) {
         getToken(token); 
-        if (!strcmp(token, "MaterialIndex")) {
+        if (!strcmp(token, "HeightmapIndex")){
+        	//change the current heightmap
+        	int index = readInt();
+        	assert(index >= 0 && index <= getNumMaterials());
+        	current_heightmap = getHeightmap(index);
+        }
+        else if (!strcmp(token, "MaterialIndex")) {
             // change the current material
             int index = readInt();
             assert (index >= 0 && index <= getNumMaterials());
@@ -362,7 +410,11 @@ Triangle* SceneParser::parseTriangle() {
     Vector3f v2 = readVector3f();
     getToken(token); assert (!strcmp(token, "}"));
     assert (current_material != NULL);
-    return new Triangle(v0,v1,v2,current_material);
+    if (current_heightmap == NULL){
+    	return new Triangle(v0,v1,v2,current_material);
+    } else {
+    	return new Triangle(v0,v1,v2,current_material,current_heightmap);
+    }
 }
 
 Mesh* SceneParser::parseTriangleMesh() {
