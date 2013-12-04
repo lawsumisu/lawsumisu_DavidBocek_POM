@@ -71,5 +71,13 @@ public:
         float angle = acos(Vector3f::dot(ray.getDirection(), normal));
         return Segment(Vector2f::ZERO, Vector2f(tan(angle), 1));
     }
+    
+    /*
+     * Returns the heightmap value for the given uvCoordinates on the given heightmap
+     */
+    static float QueryHeightmap(const Vector2f& uvCoords, const Texture* heightmap){
+    	return (1.0f - heightmap(uvCoords[0],uvCoords[1]));
+    }
+    
 };
 #endif

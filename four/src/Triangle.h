@@ -23,6 +23,14 @@ public:
         this->material = m;
         hasTex = false;
     }
+    //overloaded constructor with heightmap material pointer
+    Triange(const Vector3f& a, const Vector3f& b, const Vector3f& c, Material* m, Texture* heightmap):Object3D(m){
+    	this->a = a;
+    	this->b = b;
+    	this->c = c;
+    	this->material = m;
+    	this->heightmap = heightmap;
+    }
 
     virtual bool intersect( const Ray& ray,  Hit& hit , float tmin){
         //Uses Cramer's rule to calculate barycentric coordinates
@@ -59,6 +67,7 @@ protected:
     Vector3f b;
     Vector3f c;
     Material* material;
+    Texture* heightmap;
 
 };
 
