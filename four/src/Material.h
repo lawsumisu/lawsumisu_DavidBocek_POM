@@ -67,10 +67,14 @@ public:
       void setTexCoord(Vector2f uv){
           this->texCoord = uv;
       }
+      Vector2f getTexCoord(){
+      	return texCoord;
+      }
 protected:
+	Vector2f texCoord;
     Vector3f diffuseColor;
     Vector3f specularColor;
-    Vector2f texCoord;
+    
     float shininess;
     Texture t;
 };

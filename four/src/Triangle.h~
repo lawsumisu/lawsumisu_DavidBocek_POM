@@ -47,7 +47,6 @@ public:
         Matrix3f m_Beta = Matrix3f(a-r_o, a-c, r_d);
         Matrix3f m_Gamma = Matrix3f(a-b, a-r_o, r_d);
         Matrix3f m_T = Matrix3f(a-b, a-c, a-r_o);
-        
         float A_determinant = m_A.determinant();
         
         float beta = m_Beta.determinant()/A_determinant;
@@ -55,6 +54,8 @@ public:
         float t = m_T.determinant()/A_determinant;
         
         if (beta+gamma <= 1 && beta >= 0 && gamma >=0 && t>tmin && t<hit.getT()){
+       		//get UV coord 
+       		Vector2f uvCoord = texCoords[0]*(1-beta-gamma)+texCoords[1]*beta+texCoords[2]*gamma;
         	//parrallax offset of UV coord
         	Vector2f uvCoordOffset = Vector2f::ZERO;
             //Check for intersection here.
@@ -75,16 +76,12 @@ public:
 		            float d2 = (i+1)/n*length;
 		            //Use deltas to get heights from height map.
 		            //get hit point in UV
-		            Vector2f hitUV = hit.texCoord;
+		            Vector2f hitUV = uvCoord;
 		            //get ray direction projected to UV
-		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection()).normalized();
-		            //cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
+		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
 		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
-		            texCoords[0].print();
-		            texCoords[1].print();
-		            texCoords[2].print();
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
@@ -93,7 +90,7 @@ public:
 		                float delta = intersection.x();
 		                //get coordinate offset for this delta
 		                uvCoordOffset = hitUV + rayDirUV * delta;
-		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
+		                cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
             }
@@ -129,7 +126,7 @@ public:
                     //material->setTexCoord(TODO: set tex coord here)
                 }*/
             //barycentric interpolation with added parallax offset
-            material->setTexCoord(texCoords[0]*(1-beta-gamma)+texCoords[1]*beta+texCoords[2]*gamma+uvCoordOffset);
+            material->setTexCoord(uvCoord+uvCoordOffset);
             hit.set(t, material, interpolatedNormal);
             return true;
         }
@@ -153,7 +150,7 @@ public:
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
     	//M.print();
-    	//return M * xyzCoords;
+    	return M * xyzCoords;
     }
     
     bool hasTex;
