@@ -66,7 +66,7 @@ public:
             //Do segment intersection to get appropriate texCoordinate offset.
 
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
-            	cout << heightmap << endl << endl;
+            	//cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
 		        for (int i=0; i<numPoints; i+=1){
@@ -77,10 +77,10 @@ public:
 		            Vector2f hitUV = hit.texCoord;
 		            //get ray direction projected to UV
 		            Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
-		            cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
+		            //cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
-		            cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
+		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
@@ -136,10 +136,10 @@ public:
     	Vector3f e13_XYZ = c-a;
     	Vector2f e12_UV = texCoords[1] - texCoords[0];
     	Vector2f e13_UV = texCoords[2] - texCoords[0];
-    	e12_XYZ.print();
-    	e13_XYZ.print();
-    	e12_UV.print();
-    	e13_UV.print();
+    	//e12_XYZ.print();
+    	//e13_XYZ.print();
+    	//e12_UV.print();
+    	//e13_UV.print();
     	Vector3f uVec = e12_UV[0] == 0 ? (e13_XYZ / e13_UV[0]).normalized() : 
     									(e12_XYZ / e12_UV[0]).normalized();
     	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ);
@@ -147,8 +147,8 @@ public:
     	//uVec.print(); vVec.print(); nVec.print();
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
-    	//M.print();
-    	return M * xyzCoords;
+    	M.print();
+    	//return M * xyzCoords;
     }
     
     bool hasTex;

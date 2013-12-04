@@ -427,7 +427,7 @@ Mesh* SceneParser::parseTriangleMesh() {
     getToken(token); assert (!strcmp(token, "}"));
     const char *ext = &filename[strlen(filename)-4];
     assert(!strcmp(ext,".obj"));
-    Mesh *answer = new Mesh(filename,current_material);
+    Mesh *answer = new Mesh(filename,current_material,current_heightmap);
 
     return answer;
 }
