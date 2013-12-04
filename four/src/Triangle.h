@@ -26,6 +26,7 @@ public:
         this->material = m;
         hasTex = false;
         this->numPoints = 1000;
+        this->heightmap = NULL;
     }
     //overloaded constructor with heightmap material pointer
     Triangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, Material* m, Texture* heightmap):Object3D(m){
@@ -65,9 +66,10 @@ public:
             //Do segment intersection to get appropriate texCoordinate offset.
 
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
+            	cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
 		        float length = incidentSegment.end()[0];
-		        for (int i=0; i<numPoints; i++){
+		        for (int i=0; i<numPoints; i+=1){
 		            float d1 = i/numPoints*length;
 		            float d2 = (i+1)/numPoints*length;
 		            //Use deltas to get heights from height map.
@@ -78,6 +80,7 @@ public:
 		            cout << rayDirUVN[0] << " " << rayDirUVN[1] << " " << rayDirUVN[2] << endl;
 		            Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		            //Query heightmap at {d1,d2} along T
+		            cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
@@ -133,14 +136,18 @@ public:
     	Vector3f e13_XYZ = c-a;
     	Vector2f e12_UV = texCoords[1] - texCoords[0];
     	Vector2f e13_UV = texCoords[2] - texCoords[0];
+    	e12_XYZ.print();
+    	e13_XYZ.print();
+    	e12_UV.print();
+    	e13_UV.print();
     	Vector3f uVec = e12_UV[0] == 0 ? (e13_XYZ / e13_UV[0]).normalized() : 
     									(e12_XYZ / e12_UV[0]).normalized();
     	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ);
     	Vector3f vVec = Vector3f::cross(uVec,nVec);
-    	uVec.print(); vVec.print(); nVec.print();
+    	//uVec.print(); vVec.print(); nVec.print();
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
-    	M.print();
+    	//M.print();
     	return M * xyzCoords;
     }
     

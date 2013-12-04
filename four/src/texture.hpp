@@ -13,8 +13,9 @@ public:
   ///@param x assumed to be between 0 and 1
   Vector3f operator()(float x, float y);
   ~Texture();
+  int width , height;
 private:
   bitmap_image * bimg;
-  int width , height;
+
 };
 #endif

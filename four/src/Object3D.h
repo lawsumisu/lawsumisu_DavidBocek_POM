@@ -16,6 +16,7 @@ public:
 
     Object3D( Material* material){
         this->material = material ; 
+        this->heightmap = NULL;
     }
     
     Object3D( Material* material, Texture* heightmap){
