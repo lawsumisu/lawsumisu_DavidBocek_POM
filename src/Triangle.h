@@ -181,7 +181,7 @@ public:
     	M.transpose();
     	//M.print();
     	return M * xyzCoords;*/
-    	return Vector3f(xyzCoords[0],-xyzCoords[2],xyzCoords[1]);
+    	return Vector3f(xyzCoords[0],-xyzCoords[2],xyzCoords[1]); //hack for rn, objs on xz plane
     }
     
     bool hasTex;

@@ -1,7 +1,7 @@
 
 PerspectiveCamera {
-    center 0 5 5
-    direction 0 -1 -1
+    center 0 5.5 4
+    direction 0 -1.5 -1
     up 0 1 -1
     angle 30
 }
@@ -25,22 +25,17 @@ Materials {
 	  diffuseColor 1.0 1.0 1.0 
 	  specularColor 0 0 0
 	  shininess 0
-	  texture models/terrain/terrain_render.bmp
+	  texture models/terrain/texture-rock.bmp
 	}
 }
 
 
-Heightmaps {
-	numHeightmaps 1
-	Heightmap {
-		heightmapFile models/terrain/heightmap_render2.bmp
-	}
-}
+
 
 Group {
     numObjects 1
     MaterialIndex 0
-    HeightmapIndex 0
+
     Transform {
 		Translate  0 0 0
         TriangleMesh {
