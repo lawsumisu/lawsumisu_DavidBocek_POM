@@ -107,7 +107,7 @@ private:
     Group* parseGroup();
     Sphere* parseSphere();
     Plane* parsePlane();
-    PlaneTriangle* parsePlaneTriangle();
+    //PlaneTriangle* parsePlaneTriangle();
     Triangle* parseTriangle();
     Mesh* parseTriangleMesh();
     Transform* parseTransform();

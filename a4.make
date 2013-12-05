@@ -52,7 +52,7 @@ ifeq ($(config),release)
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -std=c++0x
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -Lrelease
+  LDFLAGS   += -s -Lrelease
   LIBS      += -lvecmath
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += release/libvecmath.a
@@ -69,10 +69,10 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/Image.o \
+	$(OBJDIR)/texture.o \
+	$(OBJDIR)/SceneParser.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/Mesh.o \
-	$(OBJDIR)/SceneParser.o \
-	$(OBJDIR)/texture.o \
 
 RESOURCES := \
 
@@ -136,16 +136,16 @@ endif
 $(OBJDIR)/Image.o: src/Image.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/main.o: src/main.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Mesh.o: src/Mesh.cpp
+$(OBJDIR)/texture.o: src/texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/SceneParser.o: src/SceneParser.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/texture.o: src/texture.cpp
+$(OBJDIR)/main.o: src/main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Mesh.o: src/Mesh.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 

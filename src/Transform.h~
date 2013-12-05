@@ -29,9 +29,7 @@ public:
         }
         return false;
     }
-	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
-		return false;
-	}
+
 protected:
     Object3D* o; //un-transformed object
     Matrix4f transform;

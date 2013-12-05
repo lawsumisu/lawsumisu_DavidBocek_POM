@@ -56,10 +56,7 @@ public:
         }
         return false;
     }
-	
-	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
-		return false;
-	}
+
 protected:
 
     Vector3f center;

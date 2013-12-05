@@ -45,6 +45,10 @@ public:
     {
         return t;
     }
+    float getTWithOffset() const
+    {
+    	return t_hm;
+    }
 
     Material* getMaterial() const
     {
@@ -55,10 +59,16 @@ public:
     {
         return normal;
     }
-
-    void set( float _t, Material* m, const Vector3f& n )
+	void set( float _t, Material* m, const Vector3f& n){
+		t = _t;
+		material = m;
+		normal = n;
+		t_hm = 0.0f;
+	}
+    void set( float _t, Material* m, const Vector3f& n, float t_at_heightmap )
     {
         t = _t;
+        t_hm = t_at_heightmap;
         material = m;
         normal = n;
     }
@@ -69,6 +79,7 @@ public:
     bool hasTex;
     Vector2f texCoord;
 private:
+	float t_hm;
     float t;
     Material* material;
     Vector3f normal;

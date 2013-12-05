@@ -40,9 +40,9 @@ public:
         }
         return hasIntersected;
     }
-	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Light* l){
+	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
 		for (int i=0; i<num_objects; i++){
-			if (objects[i]->heightmapIntersect(r,h,tmin,l)){
+			if (objects[i]->heightmapIntersect(r,h,tmin,lightDir)){
 				return true;
 			}
 		}

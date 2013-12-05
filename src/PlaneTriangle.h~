@@ -7,7 +7,7 @@
 #include <cmath>
 
 #include <iostream>
-/*using namespace std;
+using namespace std;
 ///TODO:
 ///Implement functions and add more fields as necessary
 class PlaneTriangle: public Object3D
@@ -71,7 +71,7 @@ protected:
     Vector3f v3;
     Vector3f v4;
     Vector3f normal;
-};*/
+};
 
 
 #endif

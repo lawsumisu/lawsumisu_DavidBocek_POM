@@ -4,6 +4,7 @@
 #include "Ray.h"
 #include "Hit.h"
 #include "Material.h"
+#include "Light.h"
 
 class Object3D
 {
@@ -25,7 +26,7 @@ public:
     }
 
     virtual bool intersect( const Ray& r , Hit& h, float tmin) = 0;
-
+	virtual bool heightmapIntersect( const Ray& r , Hit& h, float tmin, Vector3f& lightDir) = 0;
 
     char* type;
 protected:

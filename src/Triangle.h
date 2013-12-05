@@ -26,6 +26,7 @@ public:
         this->material = m;
         hasTex = false;
         this->numPoints = 1000;
+        this->numPointsShadow = 250;
         this->heightmap = NULL;
     }
     //overloaded constructor with heightmap material pointer
@@ -36,6 +37,7 @@ public:
     	this->material = m;
     	this->heightmap = heightmap;
     	this->numPoints = 1000;
+    	this->numPointsShadow = 250;
     }
 
     virtual bool intersect( const Ray& ray,  Hit& hit , float tmin){
@@ -65,7 +67,7 @@ public:
             //incidentSegment.print();
             //float length = incidentSegment.end()[0];
             //Do segment intersection to get appropriate texCoordinate offset.
-
+			float t_hm = hit.getT();
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
             	//cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
@@ -94,10 +96,11 @@ public:
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
 		            Vector2f intersection;
 		            //if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
-		         	if (POMUtils::Intersect(rayDirTH,d1,h1,d2,h2,intersection)){
+		         	if (POMUtils::Intersect(Vector2f(0.0f,0.0f),rayDirTH,d1,h1,d2,h2,intersection)){
 		                float delta = intersection[0];
 		                //get coordinate offset for this delta
 		                uvCoordOffset = rayDirUV * delta;
+		                t_hm += delta / rayDirUV.abs();
 		                hasHit = true;
 		                //cout << d1 << " " << h1 << " , " << d2 << " " << h2 << endl;
 		                //intersection.print();
@@ -113,11 +116,46 @@ public:
             if (newTexCoord[1] < 0.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
             if (newTexCoord[1] > 1.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
             material->setTexCoord(newTexCoord);
-            hit.set(t, material, interpolatedNormal);
+            hit.set(t, material, interpolatedNormal, t_hm);
             return true;
         }
         return false;
     }
+    
+    virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
+    	if (heightmap == NULL){
+    		return false;
+    	}
+    	Vector3f offsetPoint = r.pointAtParameter(h.getTWithOffset());
+    	Vector3f dirToLight = lightDir;
+    	Vector3f rayDirUVN = transformXYZtoUVN(dirToLight);
+    	Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
+    	Vector2f rayDirTH = Vector2f(rayDirUV.abs(),-rayDirUVN[2]);
+    	Vector3f rayOrigUVN = transformXYZtoUVN(offsetPoint)-transformXYZtoUVN(r.pointAtParameter(h.getT()));
+    	Vector2f rayOrigUV = Vector2f(rayOrigUVN[0],rayOrigUVN[1]);
+    	Vector2f rayOrigTH = Vector2f(rayOrigUV.abs(),-rayOrigUVN[2]);
+    	
+    	float length = rayOrigTH[0]+rayDirTH[0]*(-rayOrigTH[1]/rayDirTH[1]);
+    	
+    	int n = numPointsShadow;
+    	//icky indent, please ignore
+		    	for (int i=0; i<numPointsShadow; i++){
+		            float d1 = i/n*length;
+		            float d2 = (i+1)/n*length;
+		            //Use deltas to get heights from height map.
+		            //Query heightmap at {d1,d2} along T
+		            float h1 = POMUtils::QueryHeightmap(rayOrigUV + rayDirUV * d1, heightmap);
+		            float h2 = POMUtils::QueryHeightmap(rayOrigUV + rayDirUV * d2, heightmap);
+		            //Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
+		            Vector2f intersection;
+		            //if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
+		         	if (POMUtils::Intersect(rayOrigTH,rayDirTH,d1,h1,d2,h2,intersection)){
+		                return true;
+		            }
+		        }
+		return false;
+    }
+    
     
     Vector3f transformXYZtoUVN(Vector3f xyzCoords){
     	/*Vector3f e12_XYZ = b-a;
@@ -144,6 +182,7 @@ public:
     Vector3f normals[3];
     Vector2f texCoords[3];
     int numPoints;
+    int numPointsShadow;
 protected:
     Vector3f a;
     Vector3f b;
