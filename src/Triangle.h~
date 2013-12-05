@@ -69,7 +69,7 @@ public:
             if (heightmap != NULL){ //only run this if there is a heightmap and texturemap supplied
             	//cout << heightmap << endl << endl;
 		        Segment incidentSegment = POMUtils::convertRayTo2DSegment(ray, interpolatedNormal);
-		        float length = incidentSegment.end()[0];
+		        //float length = incidentSegment.end()[0];
 		        
 		        //get hit point in UV
 		        Vector2f hitUV = uvCoord;
@@ -77,65 +77,42 @@ public:
 		        Vector3f rayDirUVN = transformXYZtoUVN(ray.getDirection());
 		        Vector2f rayDirUV = Vector2f(rayDirUVN[0],rayDirUVN[1]);
 		        
-		        //Vector2f rayDirTH = Vector2f(rayDirUV.abs(),-rayDirUVN[2]).normalized();
-		        //float length = (1.0f/rayDirTH[0])*rayDirTH[1];
-		        
+		        Vector2f rayDirTH = Vector2f(rayDirUV.abs(),-rayDirUVN[2]);
+		        float length = (1.0f/rayDirTH[0])*rayDirTH[1];
+
                 float n = numPoints;
                 bool hasHit; //since we only want the first intersection
-		        for (int i=0; i<numPoints; i+=1){
+		        for (int i=0; i<numPoints; i++){
 		        	if (hasHit){ break; }
 		            float d1 = i/n*length;
 		            float d2 = (i+1)/n*length;
 		            //Use deltas to get heights from height map.
 		            //Query heightmap at {d1,d2} along T
-		            //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<endl;
+		            Vector3f rayDirXYZ = ray.getDirection();
 		            float h1 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d1, heightmap);
 		            float h2 = POMUtils::QueryHeightmap(hitUV + rayDirUV * d2, heightmap);
 		            Segment parallaxSegment = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
 		            Vector2f intersection;
-		            if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
-		         	//if (POMUtils::Intersect(rayDirTH,d1,h1,d2,h2,intersection)){
+		            //if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
+		         	if (POMUtils::Intersect(rayDirTH,d1,h1,d2,h2,intersection)){
 		                float delta = intersection[0];
 		                //get coordinate offset for this delta
-		                uvCoordOffset = hitUV + rayDirUV * delta;
+		                uvCoordOffset = rayDirUV * delta;
 		                hasHit = true;
-		                //cout << uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
+		                //cout << d1 << " " << h1 << " , " << d2 << " " << h2 << endl;
+		                //intersection.print();
+		                //cout << "hitUV: "<<hitUV[0]<<" "<<hitUV[1]<<" rayDirUV: "<<rayDirUV[0]<<" "<<rayDirUV[1]<<" d1,d2: "<<d1<<","<<d2<<" rayDirXYZ: " << rayDirXYZ[0]<<" " << rayDirXYZ[1] << " " << rayDirXYZ[2] << " "<< uvCoordOffset[0] << " " << uvCoordOffset[1] << endl;
 		            }
 		        }
             }
-            /*Binary method (In progress).
-            float a = 0;
-            float c = numPoints;
-            float n = numPoints;
-            while(true){
-                float b = ((int)c)/2;
-                float d1 = a/n*length;
-                float d2 = b/n*length;
-                float d3 = c/n*length;
-                float h1 = 0.5f;
-                float h2 = 0.5f;
-                float h3 = 0.5f;
-                Segment parallaxSegment1 = Segment(Vector2f(d1,h1), Vector2f(d2,h2));
-                parallaxSegment1.print();
-                Segment parallaxSegment2 = Segment(Vector2f(d2,h2), Vector2f(d3,h3));
-                parallaxSegment2.print();
-                Vector2f intersection;
-                if (Segment::intersect(incidentSegment, parallaxSegment1, intersection)){
-                    float delta = intersection.x();
-                    cout <<"Left intersect: " << delta << " " << length <<  endl;
-                    break;
-                    //TODO: Use delta to get u,v texCoordinate
-                    //material->setTexCoord(TODO: set tex coord here)
-                }
-                else if (Segment::intersect(incidentSegment, parallaxSegment2, intersection)){
-                    float delta = intersection.x();
-                    cout << "Right intersect: " << delta << endl;
-                    break;
-                    //TODO: Use delta to get u,v texCoordinate
-                    //material->setTexCoord(TODO: set tex coord here)
-                }*/
+            
             //barycentric interpolation with added parallax offset
-            material->setTexCoord(uvCoord+uvCoordOffset);
+            Vector2f newTexCoord = uvCoord+uvCoordOffset;
+            if (newTexCoord[0] < 0.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
+            if (newTexCoord[0] > 1.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
+            if (newTexCoord[1] < 0.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
+            if (newTexCoord[1] > 1.0f){ newTexCoord[0] = NULL; newTexCoord[1] = NULL;}
+            material->setTexCoord(newTexCoord);
             hit.set(t, material, interpolatedNormal);
             return true;
         }
@@ -143,7 +120,7 @@ public:
     }
     
     Vector3f transformXYZtoUVN(Vector3f xyzCoords){
-    	Vector3f e12_XYZ = b-a;
+    	/*Vector3f e12_XYZ = b-a;
     	Vector3f e13_XYZ = c-a;
     	Vector2f e12_UV = texCoords[1] - texCoords[0];
     	Vector2f e13_UV = texCoords[2] - texCoords[0];
@@ -153,13 +130,14 @@ public:
     	//e13_UV.print();
     	Vector3f uVec = e12_UV[0] == 0 ? (e13_XYZ / e13_UV[0]).normalized() : 
     									(e12_XYZ / e12_UV[0]).normalized();
-    	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ);
-    	Vector3f vVec = Vector3f::cross(uVec,nVec);
+    	Vector3f nVec = Vector3f::cross(e12_XYZ,e13_XYZ).normalized();
+    	Vector3f vVec = Vector3f::cross(uVec,nVec).normalized();
     	//uVec.print(); vVec.print(); nVec.print();
     	Matrix3f M = Matrix3f(uVec,vVec,nVec);
     	M.transpose();
     	//M.print();
-    	return M * xyzCoords;
+    	return M * xyzCoords;*/
+    	return Vector3f(xyzCoords[0],-xyzCoords[2],xyzCoords[1]);
     }
     
     bool hasTex;

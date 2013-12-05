@@ -33,18 +33,13 @@ Materials {
 	}
 }
 
-Heightmaps {
-	numHeightmaps 1
-	Heightmap {
-		heightmapFile models/wall/stone_wall_heightmap_square_edited2.bmp
-	}
-}
+
 
 
 Group {
     numObjects 1
     MaterialIndex 0
-	HeightmapIndex 0
+
     Transform {
 		Translate  0 0 0 	
         TriangleMesh {

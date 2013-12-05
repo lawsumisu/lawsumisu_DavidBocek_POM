@@ -87,7 +87,7 @@ int main( int argc, char* argv[] )
                     l->getIllumination(p,dir,col,distanceToLight);
                     Ray ray2 = Ray(p, dir);
                     Hit hit2 = Hit();
-                    if (!group->intersect(ray2, hit2, 0.1) && !group->heightmapIntersect(ray,hit,0.1,l)){
+                    if (!group->intersect(ray2, hit2, 0.1) && !group->heightmapIntersect(ray,hit,0.1)){
                         color = color + hit.getMaterial()->Shade(ray, hit, dir,col);
                         color = color + hit.getMaterial()->Specular(ray, hit, dir,col);
                     }

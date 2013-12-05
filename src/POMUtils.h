@@ -82,9 +82,9 @@ public:
      */
     static float QueryHeightmap(const Vector2f& uvCoords, Texture* heightmap){
     	//std::cout << uvCoords[0] << " " << uvCoords[1] << "\n";
-    	Vector3f color = heightmap->operator()(uvCoords[0],uvCoords[1]);
+    	Vector3f color = (*heightmap)(uvCoords[0],uvCoords[1]);
     	if(!(color[0] == color[1] && color[1] == color[2] && color[0] == color[2])){
-    		std::cout << color[1] << " " << color[2] << " " << color[3] << "\n";
+    		//std::cout << color[1] << " " << color[2] << " " << color[3] << "\n";
     	}
     	return (1.0f - color[0]);
     }

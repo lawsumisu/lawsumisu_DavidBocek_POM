@@ -41,12 +41,13 @@ public:
         return hasIntersected;
     }
 	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Light* l){
+		bool hasIntersection = false;
 		for (int i=0; i<num_objects; i++){
 			if (objects[i]->heightmapIntersect(r,h,tmin,l)){
 				return true;
 			}
 		}
-		return false;
+		return hasIntersection;
 	}
     void addObject( int index , Object3D* obj ){
         this->objects[index] = obj;
