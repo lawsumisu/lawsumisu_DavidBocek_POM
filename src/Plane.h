@@ -34,6 +34,7 @@ public:
     }
     
     virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
+		cout << "plane";
 		return false;
 	}
 

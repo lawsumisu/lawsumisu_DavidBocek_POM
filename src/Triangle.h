@@ -26,7 +26,7 @@ public:
         this->material = m;
         hasTex = false;
         this->numPoints = 1000;
-        this->numPointsShadow = 250;
+        this->numPointsShadow = 10;
         this->heightmap = NULL;
     }
     //overloaded constructor with heightmap material pointer
@@ -37,7 +37,7 @@ public:
     	this->material = m;
     	this->heightmap = heightmap;
     	this->numPoints = 1000;
-    	this->numPointsShadow = 250;
+    	this->numPointsShadow = 10;
     }
 
     virtual bool intersect( const Ray& ray,  Hit& hit , float tmin){
@@ -137,7 +137,7 @@ public:
     	
     	float length = rayOrigTH[0]+rayDirTH[0]*(-rayOrigTH[1]/rayDirTH[1]);
     	
-    	int n = numPointsShadow;
+    	float n = numPointsShadow;
     	//icky indent, please ignore
 		    	for (int i=0; i<numPointsShadow; i++){
 		            float d1 = i/n*length;
@@ -150,6 +150,12 @@ public:
 		            Vector2f intersection;
 		            //if (Segment::intersect(incidentSegment, parallaxSegment, intersection)){
 		         	if (POMUtils::Intersect(rayOrigTH,rayDirTH,d1,h1,d2,h2,intersection)){
+		         		//cout << "dirToLight"; dirToLight.print();
+		         		//cout << "rayDirUVN"; rayDirUVN.print();
+		         		//cout << "rayOrigUVN"; rayOrigUVN.print();
+		         		//cout << "offsetPoint"; offsetPoint.print();
+		         		//cout << "hit point"; r.pointAtParameter(h.getT()).print();
+		         		//cout << "t: " << h.getT() << endl;
 		                return true;
 		            }
 		        }

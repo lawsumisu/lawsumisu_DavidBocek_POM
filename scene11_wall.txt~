@@ -9,18 +9,18 @@ PerspectiveCamera {
 Lights {
     numLights 2
     DirectionalLight {
-        direction 1 -1 0
-        color 0.2 0.2 0.5 
+        direction 0 -1 0
+        color 0.4 0.4 0.7 
     }
     PointLight {
-    	position 1 40 1
+    	position -3.65 3 0
     	color .4 .4 .4
     }
 }
 
 Background {
     color 0.1 0.2 0.7
-    ambientLight 0 0 0 
+    ambientLight .1 .1 .1 
 }
 
 Materials {
@@ -29,10 +29,9 @@ Materials {
 	  diffuseColor 1.0 1.0 1.0 
 	  specularColor 0 0 0
 	  shininess 20
-	  texture models/wall/stone_wall_texture_square.bmp
+	  texture models/wall/stone_wall_square.bmp
 	}
 }
-
 
 
 
