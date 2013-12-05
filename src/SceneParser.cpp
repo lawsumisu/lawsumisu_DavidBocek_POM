@@ -304,6 +304,8 @@ Object3D* SceneParser::parseObject(char token[MAX_PARSER_TOKEN_LENGTH]) {
         answer = (Object3D*)parseSphere();
     } else if (!strcmp(token, "Plane")) {            
         answer = (Object3D*)parsePlane();
+    } else if (!strcmp(token, "PlaneTriangle")) {            
+        answer = (Object3D*)parsePlaneTriangle();
     } else if (!strcmp(token, "Triangle")) {            
         answer = (Object3D*)parseTriangle();
     } else if (!strcmp(token, "TriangleMesh")) {            
@@ -395,6 +397,19 @@ Plane* SceneParser::parsePlane() {
     return new Plane(normal,offset,current_material);
 }
 
+PlaneTriangle* SceneParser::parsePlaneTriangle(){
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token); assert (!strcmp(token, "{"));
+    getToken(token);
+    assert (!strcmp(token, "width")); 
+    float width = readFloat();
+    getToken(token);
+    assert (!strcmp(token, "height")); 
+    float height = readFloat();
+    getToken(token); assert (!strcmp(token, "}"));
+    assert (current_material != NULL);
+    return new PlaneTriangle(width, height, current_material, current_heightmap);
+}
 
 Triangle* SceneParser::parseTriangle() {
     char token[MAX_PARSER_TOKEN_LENGTH];
@@ -489,7 +504,6 @@ Transform* SceneParser::parseTransform() {
     getToken(token); assert (!strcmp(token, "}"));
     return new Transform(matrix, object);
 }
-
 // ====================================================================
 // ====================================================================
 

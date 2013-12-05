@@ -38,6 +38,7 @@ public:
           Vector3f k_d = getDiffuseColor();
           if (t.valid()){
               k_d = t(texCoord[0], texCoord[1]);
+              //k_d = heightMapColor;
           }
           
           Vector3f n = hit.getNormal().normalized();
@@ -67,6 +68,10 @@ public:
       void setTexCoord(Vector2f uv){
           this->texCoord = uv;
       }
+      void setHeightMapColor(float c){
+        heightMapColor = Vector3f(c,c,c);
+      }
+
       Vector2f getTexCoord(){
       	return texCoord;
       }
@@ -74,9 +79,11 @@ protected:
 	Vector2f texCoord;
     Vector3f diffuseColor;
     Vector3f specularColor;
+    Vector3f heightMapColor;
     
     float shininess;
     Texture t;
+    Texture* hm;
 };
 
 
