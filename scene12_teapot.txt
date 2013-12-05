@@ -1,8 +1,8 @@
 
 PerspectiveCamera {
-    center -3.65 3 0
-    direction 1 -1 0
-    up 0 0 -1
+    center 0 3 0
+    direction 0 -1 0
+    up -1 0 0
     angle 30
 }
 
@@ -10,7 +10,7 @@ Lights {
     numLights 2
     DirectionalLight {
         direction 0 -1 0
-        color 0.4 0.4 0.7 
+        color 0.7 0.4 0.4 
     }
     PointLight {
     	position -3.65 3 0
@@ -29,20 +29,26 @@ Materials {
 	  diffuseColor 1.0 1.0 1.0 
 	  specularColor 0 0 0
 	  shininess 20
-	  texture models/wall/stone_wall_texture_square.bmp
+	  texture models/teapot/teapot_render.bmp
 	}
 }
 
+Heightmaps {
+	numHeightmaps 1
+	Heightmap {
+		heightmapFile models/teapot/teapot_heightmap.bmp
+	}
+}
 
 
 Group {
     numObjects 1
     MaterialIndex 0
-
+	HeightmapIndex 0
     Transform {
 		Translate  0 0 0 	
         TriangleMesh {
-            obj_file models/wall/stone_wall_square_small.obj
+            obj_file models/teapot/teapot.obj
         }
     }
 }

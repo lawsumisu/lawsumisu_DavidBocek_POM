@@ -24,9 +24,7 @@ public:
 
   virtual bool intersect( const Ray& r , Hit& h , float tmin );
   
-  virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
-		return false;
-	}
+  virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir);
   
 private:
   void compute_norm();

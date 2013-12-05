@@ -78,6 +78,7 @@ int main( int argc, char* argv[] )
             Hit hit = Hit();
             if (group->intersect(ray, hit, camera->getTMin())){
                 float tCur = hit.getT();
+                //cout << tCur << endl;
                 Vector3f p = ray.pointAtParameter(tCur);
                 Vector3f color;
                 for (int k = 0; k < scene.getNumLights(); k++){
@@ -90,6 +91,9 @@ int main( int argc, char* argv[] )
                     Vector3f lightDir;
                     Vector3f colTrash; float dist;
                     l->getIllumination(ray.pointAtParameter(hit.getTWithOffset()),lightDir, colTrash, dist);
+                    if (group->heightmapIntersect(ray,hit,.1,lightDir)){
+                    	cout << "occlusion for light: " << k << endl;
+                    }
                     if (!group->intersect(ray2, hit2, 0.1) && !group->heightmapIntersect(ray,hit,0.1,lightDir)){
                         color = color + hit.getMaterial()->Shade(ray, hit, dir,col);
                         color = color + hit.getMaterial()->Specular(ray, hit, dir,col);

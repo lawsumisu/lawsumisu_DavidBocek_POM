@@ -29,7 +29,17 @@ public:
         }
         return false;
     }
-
+	virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
+		Vector3f r_o_trans = VecUtils::transformPoint(this->transform.inverse(), r.getOrigin());
+        Vector3f r_d_trans = VecUtils::transformDirection(this->transform.inverse(), r.getDirection());
+        Ray rTrans = Ray(r_o_trans, r_d_trans);
+        if (o->heightmapIntersect( rTrans , h , tmin, lightDir)){
+            Matrix3f normalTrans = transform.getSubmatrix3x3(0,0).inverse().transposed();
+            h.set(h.getT(), h.getMaterial(), (normalTrans*h.getNormal()).normalized());
+            return true;
+        }
+		return false;
+	}
 protected:
     Object3D* o; //un-transformed object
     Matrix4f transform;

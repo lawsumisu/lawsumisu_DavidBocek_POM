@@ -23,6 +23,11 @@ public:
   std::vector<Vector2f>texCoord; 
 
   virtual bool intersect( const Ray& r , Hit& h , float tmin );
+  
+  virtual bool heightmapIntersect(const Ray& r, Hit& h, float tmin, Vector3f& lightDir){
+		return false;
+	}
+  
 private:
   void compute_norm();
 };

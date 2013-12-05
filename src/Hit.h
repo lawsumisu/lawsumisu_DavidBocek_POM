@@ -63,7 +63,7 @@ public:
 		t = _t;
 		material = m;
 		normal = n;
-		t_hm = 0.0f;
+		t_hm = _t;
 	}
     void set( float _t, Material* m, const Vector3f& n, float t_at_heightmap )
     {
